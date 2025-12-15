@@ -4,6 +4,8 @@
 
 Successfully implemented comprehensive improvements to the chessboard and piece detection system for InternetChessKiller, transforming it from a brittle pixel-perfect matching system to a robust, adaptive, and maintainable solution.
 
+**Latest Update**: Added full support for **chess.com** and **lichess.org**, the two most popular online chess platforms, with multiple theme support per site. See [CHESS_COM_LICHESS_SUPPORT.md](CHESS_COM_LICHESS_SUPPORT.md) for details.
+
 ## Statistics
 
 ### Code Changes
@@ -31,7 +33,7 @@ Successfully implemented comprehensive improvements to the chessboard and piece 
    - PieceConfig for piece recognition
    - RecognitionParams for scanning parameters
    - SiteDetectionConfig with calibration
-   - Default configurations for 9 sites
+   - Default configurations for 11 sites (9 legacy + chess.com + lichess.org)
 
 3. **ConfigLoader.h** (201 lines)
    - INI-style configuration file parser
@@ -51,8 +53,9 @@ Successfully implemented comprehensive improvements to the chessboard and piece 
    - Board-wide validation metrics
    - Quality assurance utilities
 
-6. **detection.ini** (103 lines)
-   - Pre-configured settings for 9 chess sites
+6. **detection.ini** (170+ lines)
+   - Pre-configured settings for 11 chess sites (including chess.com and lichess.org)
+   - 6 additional theme configurations (3 per modern site)
    - Customizable detection parameters
    - Easy to modify without recompilation
 
@@ -67,6 +70,13 @@ Successfully implemented comprehensive improvements to the chessboard and piece 
    - Build artifact exclusions
    - IDE file patterns
    - Log and temporary files
+
+9. **CHESS_COM_LICHESS_SUPPORT.md** (400+ lines)
+   - Comprehensive guide for chess.com and lichess.org
+   - 6 theme configurations documented
+   - Performance benchmarks per site
+   - Testing procedures and troubleshooting
+   - Configuration reference and examples
 
 ## Files Modified
 

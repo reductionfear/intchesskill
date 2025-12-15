@@ -8,6 +8,12 @@
 // Configuration structures for adaptive board and piece detection
 //---------------------------------------------------------------------------
 
+// Helper function to pack RGB values into integer format for border colors
+inline int MakeBorderColor(int r, int g, int b) {
+    return r + (g << 8) + (b << 16);
+}
+
+
 // Border detection configuration
 struct BorderConfig {
     int color;                    // Target border color
@@ -162,6 +168,34 @@ inline SiteDetectionConfig GetDefaultConfig(int programType) {
             config.piece.whiteThreshold = 220;
             config.piece.blackThreshold = 50;
             config.recognition.recognizeType = 1;
+            break;
+            
+        case 9: // chesscom (defined as const int chesscom = 9 in TBoardCapture.h)
+            // Chess.com boards typically have subtle borders with varied colors
+            // Use adaptive detection for maximum flexibility across themes
+            config.border.color = MakeBorderColor(84, 153, 119); // Green board default
+            config.border.colorThreshold = 40.0; // High tolerance for theme variations
+            config.border.useExactMatch = false;
+            config.piece.whiteThreshold = 220;
+            config.piece.blackThreshold = 60;
+            config.piece.useAdaptive = true; // Enable adaptive for all themes
+            config.piece.contrastRatio = 1.3;
+            config.recognition.recognizeType = 1;
+            config.recognition.blackMax = 80;
+            break;
+            
+        case 10: // lichess (defined as const int lichess = 10 in TBoardCapture.h)
+            // Lichess.org has clean borders and well-defined squares
+            // Adaptive detection handles light/dark themes automatically
+            config.border.color = MakeBorderColor(139, 125, 96); // Blue theme default
+            config.border.colorThreshold = 35.0; // Good tolerance for themes
+            config.border.useExactMatch = false;
+            config.piece.whiteThreshold = 210;
+            config.piece.blackThreshold = 55;
+            config.piece.useAdaptive = true; // Enable adaptive for all themes
+            config.piece.contrastRatio = 1.4;
+            config.recognition.recognizeType = 1;
+            config.recognition.blackMax = 75;
             break;
     }
     
