@@ -163,6 +163,34 @@ inline SiteDetectionConfig GetDefaultConfig(int programType) {
             config.piece.blackThreshold = 50;
             config.recognition.recognizeType = 1;
             break;
+            
+        case 9: // chesscom
+            // Chess.com boards typically have subtle borders with varied colors
+            // Use adaptive detection for maximum flexibility across themes
+            config.border.color = (119<<16) + (153<<8) + 84; // Green board default
+            config.border.colorThreshold = 40.0; // High tolerance for theme variations
+            config.border.useExactMatch = false;
+            config.piece.whiteThreshold = 220;
+            config.piece.blackThreshold = 60;
+            config.piece.useAdaptive = true; // Enable adaptive for all themes
+            config.piece.contrastRatio = 1.3;
+            config.recognition.recognizeType = 1;
+            config.recognition.blackMax = 80;
+            break;
+            
+        case 10: // lichess
+            // Lichess.org has clean borders and well-defined squares
+            // Adaptive detection handles light/dark themes automatically
+            config.border.color = (96<<16) + (125<<8) + 139; // Blue theme default
+            config.border.colorThreshold = 35.0; // Good tolerance for themes
+            config.border.useExactMatch = false;
+            config.piece.whiteThreshold = 210;
+            config.piece.blackThreshold = 55;
+            config.piece.useAdaptive = true; // Enable adaptive for all themes
+            config.piece.contrastRatio = 1.4;
+            config.recognition.recognizeType = 1;
+            config.recognition.blackMax = 75;
+            break;
     }
     
     return config;

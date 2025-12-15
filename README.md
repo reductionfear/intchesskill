@@ -12,11 +12,18 @@ when analyze has been changed accordingly
 
 Program works on many chess board game websites:
 
+**Modern Sites (Fully Supported with Adaptive Detection):**
+- ✅ **chess.com** - Multiple themes including Green, Brown, and Dark Mode
+- ✅ **lichess.org** - Multiple themes including Blue, Brown, and Dark Mode
+
+**Legacy Sites:**
 www.playchess.com --- www.chessplanet.ru --- www.bereg.ru --- www.instantchess.com ---
 www.kurnik.org --- www.kurnik.pl --- www.playok.com --- www.chessgate.de --- www.spinchat.de ---
 www.superchat.at --- www.aby.spinchat.de --- www.chessclub.com dasher (Classic Sets - Book) --- winboard ---
 
 and many more.
+
+**See [CHESS_COM_LICHESS_SUPPORT.md](CHESS_COM_LICHESS_SUPPORT.md) for detailed chess.com and lichess.org configuration and testing information.**
 
 Author: Vladislav Kovalev
 Contacts: email: kovalev1997a11@gmail.com

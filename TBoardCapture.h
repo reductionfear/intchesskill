@@ -20,6 +20,8 @@ const int winboard = 5;
 const int chessgate = 6;
 const int spinchat = 7;
 const int chessclub_dasher = 8;
+const int chesscom = 9;
+const int lichess = 10;
 
 
 class TBoardCapture {
