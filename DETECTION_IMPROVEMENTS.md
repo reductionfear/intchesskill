@@ -4,6 +4,8 @@
 
 This document describes the comprehensive improvements made to the chessboard and piece detection system in InternetChessKiller. The improvements address the brittleness of the original pixel-perfect color matching approach and introduce adaptive, robust detection techniques.
 
+**Latest Update**: Added full support for **chess.com** and **lichess.org** - the two most popular online chess platforms. See [CHESS_COM_LICHESS_SUPPORT.md](CHESS_COM_LICHESS_SUPPORT.md) for detailed configuration and testing information.
+
 ## Problem Statement
 
 The original detection system had several limitations:
@@ -87,7 +89,7 @@ Structures for flexible detection parameters:
 - **RecognitionParams**: Width, depth, corner offsets, recognition type
 - **SiteDetectionConfig**: Complete configuration with calibration state
 
-**Default Configurations**: Pre-configured for all 9 supported sites
+**Default Configurations**: Pre-configured for 11 supported sites (including chess.com and lichess.org)
 
 ### 3. External Configuration (ConfigLoader.h + detection.ini)
 
@@ -261,7 +263,7 @@ const int newsite = 9;
 1. **Color Variations**: Test with different board themes
 2. **Theme Changes**: Verify adaptation when site changes theme
 3. **Low Contrast**: Test with similar light/dark square colors
-4. **Multiple Sites**: Verify all 9 sites still work correctly
+4. **Multiple Sites**: Verify all 11 sites still work correctly (including chess.com and lichess.org)
 5. **Config Changes**: Test parameter modifications via INI file
 
 ### Validation
