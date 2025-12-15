@@ -34,7 +34,7 @@ InternetChessKiller has been ported from Borland C++ Builder (VCL) to use standa
 
 ## Building with MinGW-w64
 
-### Command Line Build
+### Option A: CMake (Recommended)
 
 ```bash
 # Create build directory
@@ -48,6 +48,20 @@ cmake -G "MinGW Makefiles" ..
 mingw32-make
 
 # Output will be in build/bin/internetchesskiller.exe
+```
+
+### Option B: Direct Makefile (No CMake)
+
+If you prefer not to use CMake:
+
+```bash
+# Build directly with MinGW make
+mingw32-make -f Makefile.mingw
+
+# Output will be in bin/internetchesskiller.exe
+
+# Clean
+mingw32-make -f Makefile.mingw clean
 ```
 
 ### Alternative: MSYS2 Build

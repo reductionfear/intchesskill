@@ -294,29 +294,9 @@ bool TBoardCapture::ColorIsBorder(int color)
 
 void TBoardCapture::ShowScreen()
 {
-  TForm *Form = ScreenScanerWindow;
-  if (BoardRecognized) {
-    for (int y=0; y<BoardSize; y++)
-      for (int x=0; x<BoardSize; x++) {
-        if (y < Form->ClientHeight && x < Form->ClientWidth) {
-          int xx = StartPixel[y*BitmapSizeX+x];
-          int r = xx & 255;
-          int g = (xx>>8) & 255;
-          int b = (xx>>16) & 255;
-          Form->Canvas->Pixels[x][y] = (r<<16)|(g<<8)|b;
-        }
-      }
-  }
-  else {
-    for (int y=0; y<Form->ClientHeight && y<BitmapSizeY; y++)
-      for (int x=0; x<Form->ClientWidth && x<BitmapSizeX; x++) {
-        int xx = ScreenBuffer[y*BitmapSizeX+x];
-        int r = xx & 255;
-        int g = (xx>>8) & 255;
-        int b = (xx>>16) & 255;
-        Form->Canvas->Pixels[x][y] = (r<<16)|(g<<8)|b;
-      }
-  }
+  // No GUI - this function would display the captured screen
+  // in ScreenScanerWindow for debugging purposes
+  // The capture data is still in ScreenBuffer but not displayed
 }
 
 
