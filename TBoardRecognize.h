@@ -6,6 +6,7 @@
 #include "board.h"
 #include "TBoardCapture.h"
 #include "find_pos.h"
+#include "ColorUtils.h"
 //---------------------------------------------------------------------------
 
 class TBoardRecognize {
@@ -19,10 +20,13 @@ class TBoardRecognize {
     TBoardCapture BoardCapture;
     TFindPos FindPos;
     bool SquareIsMarked(int sq);
+    void CalibrateSquareColors();
   private:
     bool IsPixelWhite(int x);
     bool IsPixelBlack(int x);
     bool IsPixelMark(int x);
+    bool IsPixelWhiteAdaptive(int x);
+    bool IsPixelBlackAdaptive(int x);
     void ConvertBoardToFindPos();
     bool CheckForWhite(int *cur, int size, int width, int depth);
     bool CheckForBlack(int *cur, int size, int width, int depth);
