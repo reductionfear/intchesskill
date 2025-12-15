@@ -1,21 +1,19 @@
 //---------------------------------------------------------------------------
-#pragma hdrstop
 
 #include "TUCIInterface.h"
 #include "move.h"
-#include "main.h"
 #include "parse.h"
 #include "move_do.h"
 #include "move_legal.h"
+#include <string>
+#include <sstream>
 
 //---------------------------------------------------------------------------
 
-#pragma package(smart_init)
-
-TUCIInterface::TUCIInterface(AnsiString FileName)
+TUCIInterface::TUCIInterface(const std::string& FileName, int multiPV)
 {
   Started = false;
-  MultiPV = MainForm->MultiPV;
+  MultiPV = multiPV;
   Process = new TProcess(FileName);
   Process->Send("uci");
   char buf[10000];
@@ -38,17 +36,20 @@ TUCIInterface::TUCIInterface(AnsiString FileName)
           if (string_equal(cur_word,"id")) {
             cur_word = get_cur_word_str(&cur_line);
             if (string_equal(cur_word,"name")) {
-              AnsiString EngineName = cur_line;
-              MainForm->lbEngineName->Caption = EngineName;
+              // Engine name found: cur_line
+              // No GUI to display it
             }
           }
           if (string_equal(cur_word,"uciok")) {
-            if (MainForm->MultiPV > 1) {
-              Process->Send("setoption name MultiPV value " + IntToStr(MultiPV));
+            if (MultiPV > 1) {
+              std::ostringstream oss;
+              oss << "setoption name MultiPV value " << MultiPV;
+              Process->Send(oss.str());
               Sleep(100);
               Process->Get(buf);
             }
-            Process->Send("setoption name Hash value " + IntToStr(MainForm->HashSize));
+            // Note: Hash size is hardcoded to 64MB for now
+            Process->Send("setoption name Hash value 64");
             return;
           }
         }
@@ -107,21 +108,14 @@ mv_t TUCIInterface::TreatEngineOutput(TState * State)
 
 void TUCIInterface::ShowPV()
 {
-  MainForm->Memo->Lines->Clear();
-  if (Started)
-    for (int i=0; i<MainForm->MultiPV; i++) {
-      AnsiString s;
+  // No GUI to show PV - could log to console or file if needed
+  if (Started) {
+    for (int i=0; i<MultiPV; i++) {
       if (PV[i].pv_len > 0) {
-        s += PV[i].score;
-        s += " ";
+        // PV line available but not displayed (no GUI)
       }
-      for (int j=0; j<PV[i].pv_len; j++) {
-         char move_s[8];
-         s += PV[i].moves_str[j];
-           s  += " ";
-      }
-      MainForm->Memo->Lines->Append(s);
     }
+  }
 }
 mv_t TUCIInterface::ParseLine(TState * State, char *line)
 {
@@ -285,8 +279,8 @@ void TUCIInterface::StartThink(TState * State)
        Sleep(10);
      } while (!TreatEngineOutput(State));
    }
-   AnsiString pos;
-   MakeGoString(State,&pos);
+   std::string pos;
+   MakeGoString(State, pos);
    Process->Send(pos);
    for (int i=0; i<max_pv_cnt; i++)
      PV[i].pv_len = 0;
@@ -303,8 +297,8 @@ void TUCIInterface::StartThink(TState * State, int wtime, int btime, int winc, i
        Sleep(10);
      } while (!TreatEngineOutput(State));
    }
-   AnsiString pos;
-   MakeGoString(State,&pos);
+   std::string pos;
+   MakeGoString(State, pos);
    Process->Send(pos);
    for (int i=0; i<max_pv_cnt; i++)
      PV[i].pv_len = 0;
@@ -322,21 +316,21 @@ void TUCIInterface::StartThink(TState * State, int wtime, int btime, int winc, i
    Started = true;
 }
 
-void TUCIInterface::MakeGoString(TState * State, AnsiString *pos)
+void TUCIInterface::MakeGoString(TState * State, std::string& pos)
 {
-   *pos = "position startpos";
+   pos = "position startpos";
    if (State->MoveHistoryLen > 0 || State->LastMove)
-     *pos += " moves";
+     pos += " moves";
    char move_str[6] = "";
    for (int i=0; i<State->MoveHistoryLen; i++) {
      move_to_string(State->MoveHistory[i],move_str,6);
-     *pos += " ";
-     *pos += move_str;
+     pos += " ";
+     pos += move_str;
    }
    if (State->LastMove) {
      move_to_string(State->LastMove,move_str,6);
-     *pos += " ";
-     *pos += move_str;
+     pos += " ";
+     pos += move_str;
    }
 }
 

@@ -1,0 +1,119 @@
+# Makefile for InternetChessKiller - MinGW-w64
+# Simple alternative to CMake for those who prefer make
+#
+# Usage:
+#   mingw32-make -f Makefile.mingw
+#   mingw32-make -f Makefile.mingw clean
+
+# Compiler
+CXX = g++
+WINDRES = windres
+
+# Directories
+SRCDIR = .
+FRUITDIR = fruit
+BUILDDIR = build
+BINDIR = bin
+
+# Output
+TARGET = $(BINDIR)/internetchesskiller.exe
+
+# Compiler flags
+CXXFLAGS = -std=c++11 -O2 -Wall -I$(SRCDIR) -I$(FRUITDIR)
+LDFLAGS = -static-libgcc -static-libstdc++ -mwindows
+LIBS = -lgdi32 -luser32 -lkernel32 -ladvapi32
+
+# Source files
+CORE_SOURCES = \
+	main_win32.cpp \
+	TBoardCapture.cpp \
+	TBoardRecognize.cpp \
+	TEngine.cpp \
+	TUCIInterface.cpp \
+	TState.cpp \
+	TPlayer.cpp \
+	TDebug.cpp \
+	TMainThreadObject.cpp \
+	process.cpp \
+	find_pos.cpp \
+	parse.cpp
+
+FRUIT_SOURCES = \
+	$(FRUITDIR)/attack.cpp \
+	$(FRUITDIR)/board.cpp \
+	$(FRUITDIR)/fen.cpp \
+	$(FRUITDIR)/hash.cpp \
+	$(FRUITDIR)/list.cpp \
+	$(FRUITDIR)/move.cpp \
+	$(FRUITDIR)/move_check.cpp \
+	$(FRUITDIR)/move_do.cpp \
+	$(FRUITDIR)/move_evasion.cpp \
+	$(FRUITDIR)/move_gen.cpp \
+	$(FRUITDIR)/move_legal.cpp \
+	$(FRUITDIR)/my_util.cpp \
+	$(FRUITDIR)/pawn.cpp \
+	$(FRUITDIR)/piece.cpp \
+	$(FRUITDIR)/posix.cpp \
+	$(FRUITDIR)/pst.cpp \
+	$(FRUITDIR)/random.cpp \
+	$(FRUITDIR)/square.cpp \
+	$(FRUITDIR)/value.cpp \
+	$(FRUITDIR)/vector.cpp
+
+ALL_SOURCES = $(CORE_SOURCES) $(FRUIT_SOURCES)
+
+# Object files
+CORE_OBJECTS = $(patsubst %.cpp,$(BUILDDIR)/%.o,$(CORE_SOURCES))
+FRUIT_OBJECTS = $(patsubst $(FRUITDIR)/%.cpp,$(BUILDDIR)/fruit_%.o,$(FRUIT_SOURCES))
+ALL_OBJECTS = $(CORE_OBJECTS) $(FRUIT_OBJECTS)
+
+# Default target
+all: directories $(TARGET)
+
+# Create directories
+directories:
+	@if not exist "$(BUILDDIR)" mkdir "$(BUILDDIR)"
+	@if not exist "$(BINDIR)" mkdir "$(BINDIR)"
+
+# Link executable
+$(TARGET): $(ALL_OBJECTS)
+	$(CXX) $(LDFLAGS) -o $@ $^ $(LIBS)
+	@echo Build complete: $(TARGET)
+
+# Compile core source files
+$(BUILDDIR)/%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Compile fruit source files
+$(BUILDDIR)/fruit_%.o: $(FRUITDIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Clean build artifacts
+clean:
+	@if exist "$(BUILDDIR)" rmdir /S /Q "$(BUILDDIR)"
+	@if exist "$(BINDIR)" rmdir /S /Q "$(BINDIR)"
+	@echo Clean complete
+
+# Install target
+install: $(TARGET)
+	@copy /Y detection.ini $(BINDIR)\detection.ini
+	@copy /Y standard.lrn $(BINDIR)\standard.lrn
+	@echo Installed to $(BINDIR)
+
+# Help
+help:
+	@echo InternetChessKiller Build System
+	@echo.
+	@echo Usage:
+	@echo   mingw32-make -f Makefile.mingw         Build the project
+	@echo   mingw32-make -f Makefile.mingw clean   Clean build artifacts
+	@echo   mingw32-make -f Makefile.mingw install Copy config files to bin
+	@echo.
+	@echo Requirements:
+	@echo   - MinGW-w64 (g++, mingw32-make)
+	@echo   - Windows OS
+	@echo.
+	@echo Output:
+	@echo   $(TARGET)
+
+.PHONY: all clean install help directories

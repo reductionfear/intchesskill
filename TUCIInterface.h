@@ -3,7 +3,7 @@
 #define TUCIInterfaceH
 
 #include <io.h>
-#include <vcl.h>
+#include <string>
 #include "move.h"
 #include "move_do.h"
 #include "process.h"
@@ -25,7 +25,7 @@ typedef struct{
 
 class TUCIInterface {
   public:
-    TUCIInterface(AnsiString FileName);
+    TUCIInterface(const std::string& FileName, int multiPV = 1);
     ~TUCIInterface();
     int MultiPV;
     void StartThink(TState * State);
@@ -34,7 +34,7 @@ class TUCIInterface {
     void ShowPV();
     bool Started;
   private:
-    void MakeGoString(TState * State, AnsiString *pos);
+    void MakeGoString(TState * State, std::string& pos);
     mv_t ParseLine(TState * State, char *line);
     TProcess *Process;
     line_t PV[max_pv_cnt];

@@ -1,11 +1,7 @@
 //---------------------------------------------------------------------------
 
-
-#pragma hdrstop
-
 #include "TEngine.h"
 #include "parse.h"
-#include "main.h"
 
 #include "attack.h"
 #include "hash.h"
@@ -24,9 +20,7 @@
 #include "move_gen.h"
 
 #include "find_pos.h"
-#include "debug.h"
 //---------------------------------------------------------------------------
-#pragma package(smart_init)
 
 #define X_COORD(x)  ((x)&7)
 #define Y_COORD(y)  ((y)>>3)
@@ -38,7 +32,7 @@ int TEngine::SquareTo_64(int x)
   return (Rank*8) + 7-File;
 }
 
-TEngine::TEngine(AnsiString FileName)
+TEngine::TEngine(const std::string& FileName)
 {
   UCIInterface = new TUCIInterface(FileName);
   Reversed = true;
@@ -360,27 +354,12 @@ bool TEngine::SearchPos(board_t * Board, TFindPos * fp, mv_t pv[])
 
 void TEngine::ShowPosition()
 {
-  undo_t undo;
-  if (State.LastMove)
-    move_do(&State.Board,State.LastMove,&undo);
-  for (int y=0; y<8; y++)
-    for (int x=0; x<8; x++) {
-      int File = x+4;
-      int Rank = y+4;
-      int sq = Rank*16 + (15-File);
-      if (Reversed)
-        sq = 255 - sq;
-      if (State.Board.square[sq] == Empty)
-        BoardScanerWindow->PaintBoardSquare(x,y,clBlue);
-      else {
-        if (State.Board.square[sq] & WhiteFlag)
-          BoardScanerWindow->PaintBoardSquare(x,y,clWhite);
-        if (State.Board.square[sq] & BlackFlag)
-          BoardScanerWindow->PaintBoardSquare(x,y,clBlack);
-      }
-    }
-  if (State.LastMove)
-    move_undo(&State.Board,State.LastMove,&undo);
+  // No GUI - this function would display the board in a debug window
+  // In the VCL version, this painted to BoardScanerWindow
+  // Could be implemented with console output or logging if needed
+  
+  // The position is already available in State.Board
+  // For debugging, could output to console here
 }
 
 void TEngine::InitTimers()

@@ -1,10 +1,8 @@
 //---------------------------------------------------------------------------
-#pragma hdrstop
 #include "TState.h"
 #include "fen.h"
 #include "move_do.h"
 //---------------------------------------------------------------------------
-#pragma package(smart_init)
 
 TState::TState()
 {

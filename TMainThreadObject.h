@@ -3,23 +3,28 @@
 #ifndef TMainThreadObjectH
 #define TMainThreadObjectH
 //---------------------------------------------------------------------------
-#include <Classes.hpp>
+#include <thread>
+#include <atomic>
 //---------------------------------------------------------------------------
 #include "move.h"
 #include "TEngine.h"
 #include "TBoardCapture.h"
 #include "TBoardRecognize.h"
 
-class TMainThread : public TThread
+class TMainThread
 {
 private:
+   std::thread thread;
+   std::atomic<bool> terminated;
+   void Execute();
 protected:
-   void __fastcall Execute();
 public:
-   __fastcall TMainThread(bool CreateSuspended);
-   __fastcall ~TMainThread();
-   void __fastcall ShowResult();
-   void __fastcall MakeBestMove();
+   TMainThread(TEngine* engine);
+   ~TMainThread();
+   void Start();
+   void Stop();
+   void ShowResult();
+   void MakeBestMove();
    unsigned __int64 iComputerId;
    TEngine *Engine;
    bool last_key_w_state;

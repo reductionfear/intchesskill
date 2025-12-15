@@ -1,12 +1,6 @@
 //---------------------------------------------------------------------------
-#pragma hdrstop
-
 #include "TBoardRecognize.h"
-#include "debug.h"
 #include "find_pos.h"
-#include "SquareViewWindow.h"
-
-#pragma package(smart_init)
 
 #define X_COORD(x)  ((x)&7)
 #define Y_COORD(y)  ((y)>>3)
@@ -21,32 +15,9 @@ TBoardRecognize::~TBoardRecognize()
 
 void TBoardRecognize::ShowSquare(int sq)
 {
-  int sq64 = SQUARE_TO_64(sq);
-  int size = BoardCapture.BoardSize/8;
-  int delta = size*BoardCapture.BitmapSizeX;
-  int corner = 1/16;
-  int *start = BoardCapture.StartPixel + Y_COORD(sq64)*delta + X_COORD(sq64)*size +
-                  BoardCapture.BitmapSizeX*corner + corner;
-  int real_size = size - 2*corner;
-  SquareViewForm->gSquarePixels->ColCount = real_size;
-  SquareViewForm->gSquarePixels->RowCount = real_size;
-  for (int i=0; i<real_size; i++) {
-    int *cur = start;
-    for (int j=0; j<real_size; j++) {
-      if (IsPixelBlack(*cur))
-        SquareViewForm->PaintSquare(i,j,clBlack);
-      else {
-        if (IsPixelWhite(*cur))
-          SquareViewForm->PaintSquare(i,j,clWhite);
-        else
-          SquareViewForm->PaintSquare(i,j,clBlue);
-      }
-      if (IsPixelMark(*cur))
-        SquareViewForm->PaintSquare(i,j,clRed);
-      cur++;
-    }
-    start += BoardCapture.BitmapSizeX;
-  }
+  // No GUI - this function would display detailed square pixels
+  // in SquareViewForm for debugging purposes
+  // The data is still analyzed in IsPixelBlack/White but not displayed
 }
 
 bool TBoardRecognize::IsPixelBlackAdaptive(int x)
@@ -162,33 +133,9 @@ void TBoardRecognize::Recognize()
 
 void TBoardRecognize::ShowPosition()
 {
-  if (BoardCapture.Captured) {
-     for (int y=0; y<8; y++)
-       for (int x=0; x<8; x++) {
-          int sq = y*8+x;
-          if (sq == 22) {
-            int k; k++;
-          }
-          if (SquareIsMarked(y*8+x)) {
-            BoardScanerWindow->PaintScreenSquare(x,y,clRed);
-            continue;
-          }
-          if (FindPos.GetBit(White,y*8+x)) {
-            BoardScanerWindow->PaintScreenSquare(x,y,clWhite);
-            continue;
-          }
-          if (FindPos.GetBit(Black,y*8+x)) {
-            BoardScanerWindow->PaintScreenSquare(x,y,clBlack);
-            continue;
-          }
-          BoardScanerWindow->PaintScreenSquare(x,y,clBlue);
-       }
-  }
-  else {
-     for (int y=0; y<8; y++)
-       for (int x=0; x<8; x++)
-          BoardScanerWindow->PaintScreenSquare(x,y,clBlue);
-  }
+  // No GUI - this function would display the recognized board position
+  // in BoardScanerWindow for debugging purposes
+  // The position is still analyzed in FindPos but not displayed
 }
 
 void TBoardRecognize::ConvertBoardToFindPos()

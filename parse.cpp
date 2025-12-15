@@ -1,10 +1,6 @@
 //---------------------------------------------------------------------------
-#pragma hdrstop
 #include "parse.h"
-//---------------------------------------------------------------------------
-#pragma package(smart_init)
 #include <stdlib.h>
-#include "parse.h"
 
 static const int max_word_len = 255;
 

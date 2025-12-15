@@ -1,8 +1,4 @@
 //---------------------------------------------------------------------------
-
-
-#pragma hdrstop
-
 #include <string.h>
 #include "find_pos.h"
 #include "colour.h"
