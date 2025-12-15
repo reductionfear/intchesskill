@@ -8,6 +8,7 @@
 #include "ColorUtils.h"
 #include "DetectionConfig.h"
 #include "ConfigLoader.h"
+#include "EdgeDetection.h"
 //---------------------------------------------------------------------------
 
 const int chessbase = 0;
@@ -50,6 +51,7 @@ class TBoardCapture {
     bool ColorIsBorder(int color);
     bool ColorIsBorderAdaptive(int color);
     bool TBoardCapture::ColorIsWhite(int x, int y);
+    bool CheckForBoardWithEdges(int x, int y, int size);
     void Release();
     void LoadDetectionConfig();
 };

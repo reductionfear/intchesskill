@@ -192,6 +192,21 @@ bool TBoardCapture::FindBlack(int x, int y, int size)
    return false;
 }
 
+bool TBoardCapture::CheckForBoardWithEdges(int x, int y, int size)
+{
+  // Use edge detection for enhanced board validation
+  if ((y + size > BitmapSizeY - 1) || (x + size > BitmapSizeX))
+    return false;
+    
+  // Try edge-based detection for better accuracy
+  if (DetectBoardWithEdges(ScreenBuffer, x, y, size, BitmapSizeX, BitmapSizeY)) {
+    return true;
+  }
+  
+  // Fallback to original method if edge detection doesn't find board
+  return CheckForBoard(x, y, size);
+}
+
 bool TBoardCapture::CheckForBoard(int x, int y, int size)
 {
   if ((y + size > BitmapSizeY - 1) || (x + size > BitmapSizeX))
