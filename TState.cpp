@@ -2,6 +2,7 @@
 #include "TState.h"
 #include "fen.h"
 #include "move_do.h"
+#include <cstring>
 //---------------------------------------------------------------------------
 
 TState::TState()

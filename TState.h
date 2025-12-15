@@ -5,7 +5,7 @@
 #include "board.h"
 //---------------------------------------------------------------------------
 
-const max_game_len = 1000;
+const int max_game_len = 1000;
 
 class TState {
   public:

@@ -5,6 +5,10 @@
 #include <cmath>
 #include <cstdlib>
 
+#ifdef RGB
+#undef RGB
+#endif
+
 //---------------------------------------------------------------------------
 // Color utility functions for robust color matching and detection
 //---------------------------------------------------------------------------

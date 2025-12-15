@@ -47,10 +47,7 @@ bool input_available() {
    // val = 0; // needed to make the compiler happy?
 
    // have a look at the "local" buffer first, *this time before init (no idea if it helps)*
-
-   if (UseDebug && !init) printf("info string init=%d stdin->_cnt=%d\n",int(init),stdin->_cnt);
-
-   if (stdin->_cnt > 0) return true; // HACK: assumes FILE internals
+   // Note: stdin->_cnt check removed as it is not portable in MinGW/MSVC
 
    // input init (only done once)
 
