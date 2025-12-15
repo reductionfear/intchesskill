@@ -41,7 +41,9 @@ private:
     
     bool ParseBool(const std::string& value, bool defaultValue) {
         std::string lower = value;
-        for (char& c : lower) c = tolower(c);
+        for (size_t i = 0; i < lower.length(); i++) {
+            lower[i] = tolower((unsigned char)lower[i]);
+        }
         if (lower == "true" || lower == "1" || lower == "yes") return true;
         if (lower == "false" || lower == "0" || lower == "no") return false;
         return defaultValue;

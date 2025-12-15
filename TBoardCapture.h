@@ -50,7 +50,7 @@ class TBoardCapture {
     bool CheckForBoard(int x, int y, int size);
     bool ColorIsBorder(int color);
     bool ColorIsBorderAdaptive(int color);
-    bool TBoardCapture::ColorIsWhite(int x, int y);
+    bool ColorIsWhite(int x, int y);
     bool CheckForBoardWithEdges(int x, int y, int size);
     void Release();
     void LoadDetectionConfig();

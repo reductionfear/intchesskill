@@ -106,7 +106,7 @@ inline bool ValidateGridPattern(int* buffer, int x, int y, int size, int width, 
     int gridLineCount = 0;
     int expectedGridLines = 7; // 7 internal grid lines for 8x8 board
     
-    // Check for vertical grid lines
+    // Check for vertical grid lines (7 internal lines for 8x8 board)
     for (int i = 1; i < 8; i++) {
         int gridX = x + i * squareSize;
         if (DetectVerticalEdge(buffer, gridX, y, y + size, width, height, edgeThreshold)) {
@@ -114,7 +114,7 @@ inline bool ValidateGridPattern(int* buffer, int x, int y, int size, int width, 
         }
     }
     
-    // Check for horizontal grid lines
+    // Check for horizontal grid lines (7 internal lines for 8x8 board)
     for (int i = 1; i < 8; i++) {
         int gridY = y + i * squareSize;
         if (DetectHorizontalEdge(buffer, gridY, x, x + size, width, height, edgeThreshold)) {
@@ -122,8 +122,9 @@ inline bool ValidateGridPattern(int* buffer, int x, int y, int size, int width, 
         }
     }
     
-    // Should find at least half of expected grid lines
-    return gridLineCount >= expectedGridLines;
+    // Should find at least half of expected grid lines (14 total, need 7)
+    int minRequiredLines = expectedGridLines; // 7 lines minimum
+    return gridLineCount >= minRequiredLines;
 }
 
 // Enhanced board detection using edge detection

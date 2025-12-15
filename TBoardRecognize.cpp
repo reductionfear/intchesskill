@@ -474,12 +474,11 @@ void TBoardRecognize::CalibrateSquareColors()
   int corner = size / 8;
   int sampleSize = size / 4;
   
-  // d4 square (index 27) - typically a light square
-  // e5 square (index 36) - typically a dark square
-  // These are in the center and usually empty at game start
+  // Sample empty squares from the center of the board
+  // d4 square (index 27) - light square in standard chess board
+  // d5 square (index 35) - dark square in standard chess board
   int lightSquareIdx = 27; // d4
-  int darkSquareIdx = 28;  // e4 - actually also light, let's use d5 (35)
-  darkSquareIdx = 35; // d5 - dark square
+  int darkSquareIdx = 35;  // d5
   
   // Sample light square (d4)
   int *lightStart = BoardCapture.StartPixel + 
@@ -493,10 +492,17 @@ void TBoardRecognize::CalibrateSquareColors()
                    X_COORD(darkSquareIdx) * size +
                    BoardCapture.BitmapSizeX * corner + corner;
   
+  // Thresholds for filtering out piece pixels (too bright or too dark)
+  const int MIN_SQUARE_BRIGHTNESS = 20;   // Exclude very dark (black pieces)
+  const int MAX_SQUARE_BRIGHTNESS = 240;  // Exclude very bright (white pieces)
+  const int MIN_LIGHT_BRIGHTNESS = 100;   // Light squares should be reasonably bright
+  const int MAX_DARK_BRIGHTNESS = 200;    // Dark squares should not be too bright
+  
   // Average colors from center of each square
   long lightR = 0, lightG = 0, lightB = 0;
   long darkR = 0, darkG = 0, darkB = 0;
-  int sampleCount = 0;
+  int lightSampleCount = 0;
+  int darkSampleCount = 0;
   
   for (int y = 0; y < sampleSize; y++) {
     int *lightCur = lightStart + y * BoardCapture.BitmapSizeX;
@@ -507,17 +513,18 @@ void TBoardRecognize::CalibrateSquareColors()
       RGB darkRGB = UnpackColor(*darkCur);
       
       // Skip pixels that are clearly pieces (very light or very dark)
-      if (lightRGB.r > 100 && lightRGB.r < 240) {
+      if (lightRGB.r > MIN_LIGHT_BRIGHTNESS && lightRGB.r < MAX_SQUARE_BRIGHTNESS) {
         lightR += lightRGB.r;
         lightG += lightRGB.g;
         lightB += lightRGB.b;
+        lightSampleCount++;
       }
       
-      if (darkRGB.r > 20 && darkRGB.r < 200) {
+      if (darkRGB.r > MIN_SQUARE_BRIGHTNESS && darkRGB.r < MAX_DARK_BRIGHTNESS) {
         darkR += darkRGB.r;
         darkG += darkRGB.g;
         darkB += darkRGB.b;
-        sampleCount++;
+        darkSampleCount++;
       }
       
       lightCur++;
@@ -525,14 +532,14 @@ void TBoardRecognize::CalibrateSquareColors()
     }
   }
   
-  if (sampleCount > 0) {
-    BoardCapture.DetectionConfig.lightSquareColor.r = (int)(lightR / sampleCount);
-    BoardCapture.DetectionConfig.lightSquareColor.g = (int)(lightG / sampleCount);
-    BoardCapture.DetectionConfig.lightSquareColor.b = (int)(lightB / sampleCount);
+  if (lightSampleCount > 0 && darkSampleCount > 0) {
+    BoardCapture.DetectionConfig.lightSquareColor.r = (int)(lightR / lightSampleCount);
+    BoardCapture.DetectionConfig.lightSquareColor.g = (int)(lightG / lightSampleCount);
+    BoardCapture.DetectionConfig.lightSquareColor.b = (int)(lightB / lightSampleCount);
     
-    BoardCapture.DetectionConfig.darkSquareColor.r = (int)(darkR / sampleCount);
-    BoardCapture.DetectionConfig.darkSquareColor.g = (int)(darkG / sampleCount);
-    BoardCapture.DetectionConfig.darkSquareColor.b = (int)(darkB / sampleCount);
+    BoardCapture.DetectionConfig.darkSquareColor.r = (int)(darkR / darkSampleCount);
+    BoardCapture.DetectionConfig.darkSquareColor.g = (int)(darkG / darkSampleCount);
+    BoardCapture.DetectionConfig.darkSquareColor.b = (int)(darkB / darkSampleCount);
     
     BoardCapture.DetectionConfig.colorsCalibrated = true;
     BoardCapture.DetectionConfig.CalibrateThresholds();
