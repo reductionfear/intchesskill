@@ -21,8 +21,6 @@ inline double CalculateGradient(int* buffer, int x, int y, int width, int height
     //      [-2  0  2]         [ 0  0  0]
     //      [-1  0  1]         [ 1  2  1]
     
-    int idx = y * width + x;
-    
     // Get brightness values for 3x3 neighborhood
     double p[3][3];
     for (int dy = -1; dy <= 1; dy++) {

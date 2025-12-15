@@ -60,6 +60,9 @@ struct SiteDetectionConfig {
             return;
         }
         
+        // Brightness adjustment constants for piece detection
+        const double PIECE_BRIGHTNESS_OFFSET = 0.1; // 10% brightness difference
+        
         // Calculate average brightness of light and dark squares
         HSV lightHSV = RGBtoHSV(lightSquareColor);
         HSV darkHSV = RGBtoHSV(darkSquareColor);
@@ -68,11 +71,11 @@ struct SiteDetectionConfig {
         double midBrightness = (lightHSV.v + darkHSV.v) / 2.0;
         
         // White pieces should be brighter than light squares
-        piece.whiteThreshold = (int)((lightHSV.v + 0.1) * 255);
+        piece.whiteThreshold = (int)((lightHSV.v + PIECE_BRIGHTNESS_OFFSET) * 255);
         if (piece.whiteThreshold > 255) piece.whiteThreshold = 255;
         
         // Black pieces should be darker than dark squares
-        piece.blackThreshold = (int)((darkHSV.v - 0.1) * 255);
+        piece.blackThreshold = (int)((darkHSV.v - PIECE_BRIGHTNESS_OFFSET) * 255);
         if (piece.blackThreshold < 0) piece.blackThreshold = 0;
         
         piece.useAdaptive = true;
