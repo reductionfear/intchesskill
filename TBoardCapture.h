@@ -3,7 +3,7 @@
 #ifndef TBoardCaptureH
 #define TBoardCaptureH
 
-#include <vcl.h>
+#include <windows.h>
 #include "move.h"
 #include "ColorUtils.h"
 #include "DetectionConfig.h"

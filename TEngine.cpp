@@ -1,11 +1,7 @@
 //---------------------------------------------------------------------------
 
-
-#pragma hdrstop
-
 #include "TEngine.h"
 #include "parse.h"
-#include "main.h"
 
 #include "attack.h"
 #include "hash.h"
@@ -24,9 +20,7 @@
 #include "move_gen.h"
 
 #include "find_pos.h"
-#include "debug.h"
 //---------------------------------------------------------------------------
-#pragma package(smart_init)
 
 #define X_COORD(x)  ((x)&7)
 #define Y_COORD(y)  ((y)>>3)
@@ -38,7 +32,7 @@ int TEngine::SquareTo_64(int x)
   return (Rank*8) + 7-File;
 }
 
-TEngine::TEngine(AnsiString FileName)
+TEngine::TEngine(const std::string& FileName)
 {
   UCIInterface = new TUCIInterface(FileName);
   Reversed = true;

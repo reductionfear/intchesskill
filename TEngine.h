@@ -2,7 +2,7 @@
 
 #ifndef TEngineH
 #define TEngineH
-#include <vcl.h>
+#include <string>
 #include "process.h"
 #include "move.h"
 #include "board.h"
@@ -17,7 +17,7 @@
 
 class TEngine {
   public:
-    TEngine(AnsiString FileName);
+    TEngine(const std::string& FileName);
     ~TEngine();
     void Tick();
     void ShowPosition();

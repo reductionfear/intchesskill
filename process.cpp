@@ -1,7 +1,5 @@
 //---------------------------------------------------------------------------
-#pragma hdrstop
 #include "process.h"
-#pragma package(smart_init)
 
 //---------------------------------------------------------------------------
 bool TProcess::Get(char *buf)
@@ -34,18 +32,18 @@ bool TProcess::Get(char *buf)
   return false;
 }
 
-void TProcess::Send(AnsiString Command)
+void TProcess::Send(const std::string& Command)
 {
-  Command += "\n";
-  DWORD Len = Command.Length();
+  std::string cmd = Command + "\n";
+  DWORD Len = cmd.length();
   DWORD Writed;
-  if (!WriteFile(write_stdin,Command.c_str(),Len,&Writed,NULL))
+  if (!WriteFile(write_stdin,cmd.c_str(),Len,&Writed,NULL))
     throw "Can't write into pipe";
   if (Writed < Len)
     throw "Can't write into pipe";
 }
 
-TProcess::TProcess(AnsiString FileName)
+TProcess::TProcess(const std::string& FileName)
 {
   SECURITY_ATTRIBUTES sa;
   SECURITY_DESCRIPTOR sd;
