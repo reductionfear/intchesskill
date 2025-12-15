@@ -1,15 +1,10 @@
 //---------------------------------------------------------------------------
-#include <Filectrl.hpp>
 #include "TDebug.h"
-
-
-#pragma hdrstop
-
-
+#include <windows.h>
+#include <sys/stat.h>
+#include <direct.h>
 
 //---------------------------------------------------------------------------
-
-#pragma package(smart_init)
 
 TDebug::TDebug()
 {
@@ -27,8 +22,13 @@ void TDebug::OpenNewFile()
 {
   if (f)
     CloseCurFile();
-  if (!DirectoryExists("log"))
-    CreateDir("log");
+  
+  // Check if log directory exists, create if not
+  struct stat st;
+  if (stat("log", &st) != 0) {
+    _mkdir("log");
+  }
+  
 	static int log_id = 1;
 	while (log_id < 1000) {
 		char file_name[32];

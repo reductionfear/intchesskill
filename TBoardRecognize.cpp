@@ -1,12 +1,6 @@
 //---------------------------------------------------------------------------
-#pragma hdrstop
-
 #include "TBoardRecognize.h"
-#include "debug.h"
 #include "find_pos.h"
-#include "SquareViewWindow.h"
-
-#pragma package(smart_init)
 
 #define X_COORD(x)  ((x)&7)
 #define Y_COORD(y)  ((y)>>3)

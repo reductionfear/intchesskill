@@ -1,7 +1,5 @@
-#pragma hdrstop
 #include <windows.h>
 #include "TBoardCapture.h"
-#include "ScreenScanerForm.h"
 #include "square.h"
 
 #define X_COORD(x)  ((x)&7)

@@ -1,5 +1,28 @@
 InternetChessKiller
 
+## 🎯 Now Open Source - Build with Free Tools!
+
+**NEW:** This project has been ported from Borland C++ Builder to **MinGW/MSVC**, making it fully buildable with free, open-source compilers!
+
+### Quick Start - Building
+
+```bash
+# With MinGW-w64
+mkdir build && cd build
+cmake -G "MinGW Makefiles" ..
+mingw32-make
+
+# With Visual Studio
+cmake -G "Visual Studio 16 2019" ..
+cmake --build . --config Release
+```
+
+**📖 See [BUILD.md](BUILD.md) for complete build instructions**
+
+---
+
+## Overview
+
 Program created for automatic use computer chess program
 help for playing on chess servers
 
@@ -25,8 +48,43 @@ and many more.
 
 **See [CHESS_COM_LICHESS_SUPPORT.md](CHESS_COM_LICHESS_SUPPORT.md) for detailed chess.com and lichess.org configuration and testing information.**
 
-Author: Vladislav Kovalev
-Contacts: email: kovalev1997a11@gmail.com
+---
+
+## 🏗️ Technical Details
+
+### Architecture
+- **Screen Capture**: Pure Win32 GDI (`GetDC`, `BitBlt`, `GetDIBits`) - no VCL dependencies
+- **Board Detection**: Adaptive color/edge detection supporting multiple chess sites
+- **Engine Interface**: UCI protocol implementation for chess engine communication
+- **Threading**: Standard C++ `std::thread` for concurrent operation
+
+### Ported Components
+✅ **Fully Portable (No VCL):**
+- `TBoardCapture` - Screen capture using Win32 API
+- `TBoardRecognize` - Board detection and piece recognition
+- `TEngine` - Chess engine integration
+- `TUCIInterface` - UCI protocol handler
+- `fruit/*` - Chess engine library
+
+❌ **Removed (VCL GUI dependencies):**
+- VCL Forms and visual controls
+- Replaced with console-based interface
+- GUI can be re-added using Win32 API or modern frameworks
+
+### Build Requirements
+- **Compiler**: MinGW-w64, MSVC 2019+, or Clang
+- **CMake**: 3.10 or higher
+- **OS**: Windows (uses Win32 API for screen capture)
+- **Chess Engine**: Any UCI-compatible engine (Stockfish recommended)
+
+---
+
+## Credits
+## Credits
+
+**Original Author**: Vladislav Kovalev
+**Contact**: kovalev1997a11@gmail.com
+**VCL to MinGW/MSVC Port**: Community Contributors
 
 That is the source code of v 1.71. 
 That is the only source code available.
