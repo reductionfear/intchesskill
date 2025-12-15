@@ -64,6 +64,8 @@ TBoardCapture::TBoardCapture()
   BitmapInfo.bmiHeader.biSizeImage = count;
   BitmapInfo.bmiHeader.biClrUsed = 0;
   BitmapInfo.bmiHeader.biClrImportant = 0;
+  
+  LoadDetectionConfig();
 }
 
 TBoardCapture::~TBoardCapture()
@@ -212,8 +214,31 @@ bool TBoardCapture::ColorIsWhite(int x, int y)
    return r>250 && g>250 && b>250;
 }
 
+void TBoardCapture::LoadDetectionConfig()
+{
+  DetectionConfig = GetDefaultConfig(ProgramType);
+}
+
+bool TBoardCapture::ColorIsBorderAdaptive(int color)
+{
+  // Use adaptive color matching with threshold
+  if (DetectionConfig.border.useExactMatch) {
+    // Fallback to exact match for backward compatibility
+    return ClearAlphaCanal(color) == ClearAlphaCanal(DetectionConfig.border.color);
+  }
+  
+  // Use color distance threshold for more robust matching
+  double distance = ColorDistance(ClearAlphaCanal(color), 
+                                   ClearAlphaCanal(DetectionConfig.border.color));
+  return distance <= DetectionConfig.border.colorThreshold;
+}
+
 bool TBoardCapture::ColorIsBorder(int color)
 {
+  // Try adaptive detection first
+  bool adaptiveResult = ColorIsBorderAdaptive(color);
+  
+  // For certain sites with multiple border colors, check additional colors
   int res_color = ClearAlphaCanal(color);
   int r,g,b;
   switch (ProgramType) {
@@ -228,7 +253,7 @@ bool TBoardCapture::ColorIsBorder(int color)
     case winboard:
       return color == 0 || color == ((255<<16) + (255<<8));
     case chessgate:
-      return ClearAlphaCanal(color) == (155<<16) + (155<<8) + 155;
+      return adaptiveResult;
     case spinchat:
       return (ClearAlphaCanal(color) == (255<<16) + (234<<8) + 157) ||
              (ClearAlphaCanal(color) == (164<<16) + (110<<8) + 48) ||

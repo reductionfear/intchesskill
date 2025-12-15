@@ -5,6 +5,8 @@
 
 #include <vcl.h>
 #include "move.h"
+#include "ColorUtils.h"
+#include "DetectionConfig.h"
 //---------------------------------------------------------------------------
 
 const int chessbase = 0;
@@ -30,6 +32,7 @@ class TBoardCapture {
     void CaptureBoard();
     void ShowScreen();
     void MakeMove(mv_t move, int board_reversed);
+    SiteDetectionConfig DetectionConfig;
   private:
     bool BoardRecognized;
     int *ScreenBuffer;
@@ -44,8 +47,10 @@ class TBoardCapture {
     bool FindNotBlack(int x, int y, int size);
     bool CheckForBoard(int x, int y, int size);
     bool ColorIsBorder(int color);
+    bool ColorIsBorderAdaptive(int color);
     bool TBoardCapture::ColorIsWhite(int x, int y);
     void Release();
+    void LoadDetectionConfig();
 };
 
 #endif

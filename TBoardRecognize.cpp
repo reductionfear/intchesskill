@@ -49,6 +49,28 @@ void TBoardRecognize::ShowSquare(int sq)
   }
 }
 
+bool TBoardRecognize::IsPixelBlackAdaptive(int x)
+{
+  // Use adaptive threshold based on detected square colors
+  SiteDetectionConfig& config = BoardCapture.DetectionConfig;
+  
+  if (config.piece.useAdaptive && config.colorsCalibrated) {
+    // Use contrast-based detection relative to dark square color
+    RGB pixelColor = UnpackColor(x);
+    HSV pixelHSV = RGBtoHSV(pixelColor);
+    HSV darkSquareHSV = RGBtoHSV(config.darkSquareColor);
+    
+    // Black piece should be significantly darker than dark square
+    return pixelHSV.v < (darkSquareHSV.v - 0.2);
+  }
+  
+  // Fallback to configured threshold
+  RGB pixelColor = UnpackColor(x);
+  return pixelColor.r < config.piece.blackThreshold && 
+         pixelColor.g < config.piece.blackThreshold && 
+         pixelColor.b < config.piece.blackThreshold;
+}
+
 bool TBoardRecognize::IsPixelBlack(int x)
 {
   int r = x & 255;
@@ -66,6 +88,28 @@ bool TBoardRecognize::IsPixelBlack(int x)
 }
 
 
+
+bool TBoardRecognize::IsPixelWhiteAdaptive(int x)
+{
+  // Use adaptive threshold based on detected square colors
+  SiteDetectionConfig& config = BoardCapture.DetectionConfig;
+  
+  if (config.piece.useAdaptive && config.colorsCalibrated) {
+    // Use contrast-based detection relative to light square color
+    RGB pixelColor = UnpackColor(x);
+    HSV pixelHSV = RGBtoHSV(pixelColor);
+    HSV lightSquareHSV = RGBtoHSV(config.lightSquareColor);
+    
+    // White piece should be significantly brighter than light square
+    return pixelHSV.v > (lightSquareHSV.v + 0.15);
+  }
+  
+  // Fallback to configured threshold
+  RGB pixelColor = UnpackColor(x);
+  return pixelColor.r > config.piece.whiteThreshold && 
+         pixelColor.g > config.piece.whiteThreshold && 
+         pixelColor.b > config.piece.whiteThreshold;
+}
 
 bool TBoardRecognize::IsPixelWhite(int x)
 {
