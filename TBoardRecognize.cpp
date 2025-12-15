@@ -537,7 +537,10 @@ void TBoardRecognize::CalibrateSquareColors()
     }
   }
   
-  if (lightSampleCount > 0 && darkSampleCount > 0) {
+  // Require minimum sample count for reliable calibration
+  const int MIN_SAMPLES_REQUIRED = 10; // Need at least 10 valid pixels per square
+  
+  if (lightSampleCount >= MIN_SAMPLES_REQUIRED && darkSampleCount >= MIN_SAMPLES_REQUIRED) {
     BoardCapture.DetectionConfig.lightSquareColor.r = (int)(lightR / lightSampleCount);
     BoardCapture.DetectionConfig.lightSquareColor.g = (int)(lightG / lightSampleCount);
     BoardCapture.DetectionConfig.lightSquareColor.b = (int)(lightB / lightSampleCount);
