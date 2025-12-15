@@ -512,15 +512,20 @@ void TBoardRecognize::CalibrateSquareColors()
       RGB lightRGB = UnpackColor(*lightCur);
       RGB darkRGB = UnpackColor(*darkCur);
       
+      // Calculate average brightness across all channels
+      int lightBrightness = (lightRGB.r + lightRGB.g + lightRGB.b) / 3;
+      int darkBrightness = (darkRGB.r + darkRGB.g + darkRGB.b) / 3;
+      
       // Skip pixels that are clearly pieces (very light or very dark)
-      if (lightRGB.r > MIN_LIGHT_BRIGHTNESS && lightRGB.r < MAX_SQUARE_BRIGHTNESS) {
+      // Use overall brightness instead of just red channel
+      if (lightBrightness > MIN_LIGHT_BRIGHTNESS && lightBrightness < MAX_SQUARE_BRIGHTNESS) {
         lightR += lightRGB.r;
         lightG += lightRGB.g;
         lightB += lightRGB.b;
         lightSampleCount++;
       }
       
-      if (darkRGB.r > MIN_SQUARE_BRIGHTNESS && darkRGB.r < MAX_DARK_BRIGHTNESS) {
+      if (darkBrightness > MIN_SQUARE_BRIGHTNESS && darkBrightness < MAX_DARK_BRIGHTNESS) {
         darkR += darkRGB.r;
         darkG += darkRGB.g;
         darkB += darkRGB.b;

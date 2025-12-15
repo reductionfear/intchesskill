@@ -122,8 +122,9 @@ inline bool ValidateGridPattern(int* buffer, int x, int y, int size, int width, 
         }
     }
     
-    // Should find at least half of expected grid lines (14 total, need 7)
-    int minRequiredLines = expectedGridLines; // 7 lines minimum
+    // 14 total grid lines possible (7 vertical + 7 horizontal)
+    // Require at least 7 lines detected for valid board
+    int minRequiredLines = expectedGridLines; // Minimum 7 lines
     return gridLineCount >= minRequiredLines;
 }
 

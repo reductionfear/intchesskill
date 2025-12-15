@@ -3,6 +3,7 @@
 #define ColorUtilsH
 
 #include <cmath>
+#include <cstdlib>
 
 //---------------------------------------------------------------------------
 // Color utility functions for robust color matching and detection

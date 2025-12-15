@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <cctype>
 #include "DetectionConfig.h"
 
 //---------------------------------------------------------------------------
