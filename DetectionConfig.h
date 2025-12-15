@@ -167,7 +167,7 @@ inline SiteDetectionConfig GetDefaultConfig(int programType) {
         case 9: // chesscom
             // Chess.com boards typically have subtle borders with varied colors
             // Use adaptive detection for maximum flexibility across themes
-            config.border.color = (119<<16) + (153<<8) + 84; // Green board default
+            config.border.color = 84 + (153<<8) + (119<<16); // RGB(84,153,119) Green board default
             config.border.colorThreshold = 40.0; // High tolerance for theme variations
             config.border.useExactMatch = false;
             config.piece.whiteThreshold = 220;
@@ -181,7 +181,7 @@ inline SiteDetectionConfig GetDefaultConfig(int programType) {
         case 10: // lichess
             // Lichess.org has clean borders and well-defined squares
             // Adaptive detection handles light/dark themes automatically
-            config.border.color = (96<<16) + (125<<8) + 139; // Blue theme default
+            config.border.color = 139 + (125<<8) + (96<<16); // RGB(139,125,96) Blue theme default
             config.border.colorThreshold = 35.0; // Good tolerance for themes
             config.border.useExactMatch = false;
             config.piece.whiteThreshold = 210;
