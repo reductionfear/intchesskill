@@ -201,12 +201,20 @@ void TBoardRecognize::ConvertBoardToFindPos()
    int recognize_type; //0 by pixels, 1 by square
    int black_max;
    bool calc_white = false;
+   
+   // Load from configuration first
+   RecognitionParams& params = BoardCapture.DetectionConfig.recognition;
+   
    switch (ProgramType) {
       case chessassistant:
          width = size/4;
          depth = 2;
          corner = size/16;
          recognize_type = 1;
+         params.width = width;
+         params.depth = depth;
+         params.corner = corner;
+         params.recognizeType = recognize_type;
          break;
       case chessbase:
          width = size/4;
@@ -215,12 +223,22 @@ void TBoardRecognize::ConvertBoardToFindPos()
          recognize_type = 2;
          black_max = 180;
          calc_white = true;
+         params.width = width;
+         params.depth = depth;
+         params.corner = corner;
+         params.recognizeType = recognize_type;
+         params.blackMax = black_max;
+         params.calcWhite = calc_white;
          break;
       case bereg:
          width = size/8;
          depth = 4;
          corner = size/16;
          recognize_type = 1;
+         params.width = width;
+         params.depth = depth;
+         params.corner = corner;
+         params.recognizeType = recognize_type;
          break;
       case instantchess:
          width = 7;
@@ -228,18 +246,31 @@ void TBoardRecognize::ConvertBoardToFindPos()
          corner = size/8;
          recognize_type = 1;
          black_max = 60;
+         params.width = width;
+         params.depth = depth;
+         params.corner = corner;
+         params.recognizeType = recognize_type;
+         params.blackMax = black_max;
          break;
       case kurnik:
          width = size/8;
          depth = width;
          corner = size/16;
          recognize_type = 1;
+         params.width = width;
+         params.depth = depth;
+         params.corner = corner;
+         params.recognizeType = recognize_type;
          break;
       case winboard:
          width = size/4;
          depth = 3;
          corner = size/16;
          recognize_type = 1;
+         params.width = width;
+         params.depth = depth;
+         params.corner = corner;
+         params.recognizeType = recognize_type;
          break;
       case chessgate:
          width = size/4;
@@ -248,18 +279,32 @@ void TBoardRecognize::ConvertBoardToFindPos()
          recognize_type = 2;
          calc_white = false;
          black_max = 60;
+         params.width = width;
+         params.depth = depth;
+         params.corner = corner;
+         params.recognizeType = recognize_type;
+         params.calcWhite = calc_white;
+         params.blackMax = black_max;
          break;
       case spinchat:
          width = size/6;
          depth = 2;
          corner = size/16;
          recognize_type = 1;
+         params.width = width;
+         params.depth = depth;
+         params.corner = corner;
+         params.recognizeType = recognize_type;
          break;
       case chessclub_dasher:
          width = size/6;
          depth = 3;
          corner = size/16;
          recognize_type = 1;
+         params.width = width;
+         params.depth = depth;
+         params.corner = corner;
+         params.recognizeType = recognize_type;
          break;
    }
    FindPos.Init();
@@ -412,5 +457,85 @@ bool TBoardRecognize::SquareIsMarked(int sq)
     start += BoardCapture.BitmapSizeX;
   }
   return false;
+}
+
+void TBoardRecognize::CalibrateSquareColors()
+{
+  // Auto-calibrate square colors from captured board
+  // Sample empty squares to determine light and dark square colors
+  // Use squares that are typically empty in starting position (d4, e5)
+  
+  if (!BoardCapture.Captured) {
+    return;
+  }
+  
+  int size = BoardCapture.BoardSize / 8;
+  int delta = size * BoardCapture.BitmapSizeX;
+  int corner = size / 8;
+  int sampleSize = size / 4;
+  
+  // d4 square (index 27) - typically a light square
+  // e5 square (index 36) - typically a dark square
+  // These are in the center and usually empty at game start
+  int lightSquareIdx = 27; // d4
+  int darkSquareIdx = 28;  // e4 - actually also light, let's use d5 (35)
+  darkSquareIdx = 35; // d5 - dark square
+  
+  // Sample light square (d4)
+  int *lightStart = BoardCapture.StartPixel + 
+                    Y_COORD(lightSquareIdx) * delta + 
+                    X_COORD(lightSquareIdx) * size +
+                    BoardCapture.BitmapSizeX * corner + corner;
+  
+  // Sample dark square (d5)
+  int *darkStart = BoardCapture.StartPixel + 
+                   Y_COORD(darkSquareIdx) * delta + 
+                   X_COORD(darkSquareIdx) * size +
+                   BoardCapture.BitmapSizeX * corner + corner;
+  
+  // Average colors from center of each square
+  long lightR = 0, lightG = 0, lightB = 0;
+  long darkR = 0, darkG = 0, darkB = 0;
+  int sampleCount = 0;
+  
+  for (int y = 0; y < sampleSize; y++) {
+    int *lightCur = lightStart + y * BoardCapture.BitmapSizeX;
+    int *darkCur = darkStart + y * BoardCapture.BitmapSizeX;
+    
+    for (int x = 0; x < sampleSize; x++) {
+      RGB lightRGB = UnpackColor(*lightCur);
+      RGB darkRGB = UnpackColor(*darkCur);
+      
+      // Skip pixels that are clearly pieces (very light or very dark)
+      if (lightRGB.r > 100 && lightRGB.r < 240) {
+        lightR += lightRGB.r;
+        lightG += lightRGB.g;
+        lightB += lightRGB.b;
+      }
+      
+      if (darkRGB.r > 20 && darkRGB.r < 200) {
+        darkR += darkRGB.r;
+        darkG += darkRGB.g;
+        darkB += darkRGB.b;
+        sampleCount++;
+      }
+      
+      lightCur++;
+      darkCur++;
+    }
+  }
+  
+  if (sampleCount > 0) {
+    BoardCapture.DetectionConfig.lightSquareColor.r = (int)(lightR / sampleCount);
+    BoardCapture.DetectionConfig.lightSquareColor.g = (int)(lightG / sampleCount);
+    BoardCapture.DetectionConfig.lightSquareColor.b = (int)(lightB / sampleCount);
+    
+    BoardCapture.DetectionConfig.darkSquareColor.r = (int)(darkR / sampleCount);
+    BoardCapture.DetectionConfig.darkSquareColor.g = (int)(darkG / sampleCount);
+    BoardCapture.DetectionConfig.darkSquareColor.b = (int)(darkB / sampleCount);
+    
+    BoardCapture.DetectionConfig.colorsCalibrated = true;
+    BoardCapture.DetectionConfig.CalibrateThresholds();
+  }
 }
 

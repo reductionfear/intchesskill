@@ -216,7 +216,16 @@ bool TBoardCapture::ColorIsWhite(int x, int y)
 
 void TBoardCapture::LoadDetectionConfig()
 {
+  // Start with default configuration
   DetectionConfig = GetDefaultConfig(ProgramType);
+  
+  // Try to load from configuration file if it exists
+  ConfigLoader loader;
+  if (loader.LoadSiteConfig("detection.ini", ProgramType, DetectionConfig)) {
+    // Successfully loaded from file
+    // Configuration is already updated by LoadSiteConfig
+  }
+  // Otherwise use defaults
 }
 
 bool TBoardCapture::ColorIsBorderAdaptive(int color)

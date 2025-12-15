@@ -20,6 +20,7 @@ class TBoardRecognize {
     TBoardCapture BoardCapture;
     TFindPos FindPos;
     bool SquareIsMarked(int sq);
+    void CalibrateSquareColors();
   private:
     bool IsPixelWhite(int x);
     bool IsPixelBlack(int x);

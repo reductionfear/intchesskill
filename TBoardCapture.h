@@ -7,6 +7,7 @@
 #include "move.h"
 #include "ColorUtils.h"
 #include "DetectionConfig.h"
+#include "ConfigLoader.h"
 //---------------------------------------------------------------------------
 
 const int chessbase = 0;
