@@ -1,0 +1,45 @@
+# Build artifacts
+*.obj
+*.exe
+*.dll
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.res
+*.bak
+
+# Borland C++ Builder
+*.~*
+*.ddp
+*.cgl
+*.tds
+*.map
+*.csm
+
+# Directories
+bin/
+obj/
+debug/
+release/
+__history/
+
+# IDE files
+*.local
+*.identcache
+*.dproj.local
+
+# Log files
+*.log
+debug.txt
+log/
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
